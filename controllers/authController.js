@@ -2,13 +2,22 @@ const User = require('../models/User');
 const passport = require('passport');
 
 exports.register = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, password, role } = req.body;
   try {
-    const user = new User({ username, password });
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).render('register', { title: 'Register', error: 'Email already exists' });
+    }
+    user = await User.findOne({ username });
+    if (user) {
+      return res.status(400).render('register', { title: 'Register', error: 'Username already exists' });
+    }
+    user = new User({ username, email, password, role });
     await user.save();
     res.redirect('/login');
-  } catch (err) {
-    res.status(400).send('Error registering user');
+  } catch (error) {
+    console.error(error);
+    res.status(500).render('register', { title: 'Register', error: 'Server error' });
   }
 };
 

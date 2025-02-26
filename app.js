@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
 const expressLayouts = require('express-ejs-layouts');
+const connectFlash = require('connect-flash');
 const connectDB = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
-const { ensureAuthenticated } = require('./middleware/authMiddleware');
+const adminRoutes = require('./routes/adminRoutes');
+const { ensureAuthenticated, ensureAdmin } = require('./middleware/authMiddleware');
 require('dotenv').config();
 require('./config/passport')(passport);
 
@@ -28,12 +30,27 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(connectFlash());
+app.use(express.static('public'));
+
+// Variables globales
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
+});
 
 // Rutas
 app.use('/', authRoutes);
+app.use('/', adminRoutes);
 app.get('/', (req, res) => res.render('index', { title: 'Inicio' }));
 app.get('/dashboard', ensureAuthenticated, (req, res) => {
-  res.render('dashboard', { title: 'Dashboard', user: req.user });
+  if (req.user.role === 'admin') {
+    res.redirect('/admin/dashboard');
+  } else {
+    res.render('dashboard', { title: 'Dashboard', user: req.user });
+  }
 });
 
 const PORT = process.env.PORT || 5000;

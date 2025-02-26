@@ -7,6 +7,11 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   password: {
     type: String,
     required: true,
@@ -16,6 +21,14 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  favorites: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Movie',
+  }],
+  reviews: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Review',
+  }],
 });
 
 UserSchema.pre('save', async function (next) {
