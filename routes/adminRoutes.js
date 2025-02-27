@@ -10,5 +10,6 @@ router.post('/admin/movies/:id/edit', ensureAdmin, adminController.editMovie);
 router.post('/admin/movies/:id/delete', ensureAdmin, adminController.deleteMovie);
 router.post('/admin/reviews/:id/delete', ensureAdmin, adminController.deleteReview);
 router.post('/admin/users/:id/delete', ensureAdmin, adminController.deleteUser);
+router.get('/admin/movies', ensureAdmin, adminController.getMovies);
 
 module.exports = router;

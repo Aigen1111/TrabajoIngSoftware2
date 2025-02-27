@@ -1,6 +1,7 @@
 const Movie = require('../models/Movie');
 const User = require('../models/User');
 const Review = require('../models/Review');
+const Rating = require('../models/Rating'); 
 
 exports.getAdminDashboard = async (req, res) => {
   try {
@@ -79,6 +80,16 @@ exports.deleteUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.redirect('/admin/dashboard');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.getMovies = async (req, res) => {
+  try {
+    const movies = await Movie.find().populate('ratings').populate('reviews');
+    res.render('movies', { title: 'Películas Existentes', movies });
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');

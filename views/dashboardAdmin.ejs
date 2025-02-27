@@ -8,6 +8,12 @@
 </head>
 <body class="bg-gray-100">
   <div class="container mx-auto p-8">
+    <nav class="bg-white p-4 rounded shadow mb-6">
+      <ul class="flex space-x-4">
+        <li><a href="/admin/dashboard" class="text-blue-500">Dashboard</a></li>
+        <li><a href="/admin/movies" class="text-blue-500">Películas Existentes</a></li>
+      </ul>
+    </nav>
     <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
     
     <section class="mb-8">
@@ -83,18 +89,6 @@
         </div>
         <button type="submit" class="bg-blue-500 text-white p-2 rounded mt-4">Agregar Película</button>
       </form>
-      <h3 class="text-xl font-bold mb-2">Películas Existentes</h3>
-      <ul class="list-disc pl-5">
-        <% topRatedMovies.forEach(movie => { %>
-          <li>
-            <%= movie.title %>
-            <a href="/admin/movies/<%= movie._id %>/edit" class="text-blue-500 ml-2">Editar</a>
-            <form action="/admin/movies/<%= movie._id %>/delete" method="POST" class="inline">
-              <button type="submit" class="text-red-500 ml-2">Eliminar</button>
-            </form>
-          </li>
-        <% }) %>
-      </ul>
     </section>
   </div>
 </body>
